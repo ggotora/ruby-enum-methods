@@ -1,8 +1,21 @@
 module Enumerable
-  def my_each(arr)
-    arr.length.times { |i| yield(arr[i]) }    
+  def my_each
+   (self.length).times { |index| yield(self[index]) }
+  end
+
+  def my_each_with_index
+    return to_enum unless block_given?
+
+    i = 0
+    while i < lenght
+      yield(self[i], i)
+      i += 1
+    end
   end
 end
 
 include Enumerable
-Enumerable.my_each([1, 3, 5,]) { |el| puts el}
+array1 = ["hi", 34, "potatoes", "horses", 33]
+
+puts "my_each output\:";puts ""
+array1.my_each { |item| puts item }
