@@ -21,6 +21,14 @@ module Enumerable
       my_select
   end
 
+  def my_all
+    all_el = true
+    self.my_each do ||
+       unless yield(item)
+         all_el = false
+      end
+    end
+  end
 end
 
 include Enumerable
@@ -32,8 +40,11 @@ array1.my_each { |item| puts item }
 puts "\neach output\:";puts""
 array1.each { |item| puts item }
 
-puts "\nmy_each output\:";puts""
+puts "\nmy_each_with_index output\:";puts""
 array1.my_each_with_index {|item, index| puts "#{item} : #{index} "}
+
+puts "\neach_with_index output\:";puts""
+array1.each_with_index {|item, index| puts "#{item} : #{index} "}
 
 puts "\nmy_select output\:";puts""
 puts array1.my_select { |item| item.to_s.length > 2}
@@ -41,3 +52,5 @@ puts array1.my_select { |item| item.to_s.length > 2}
 puts "\nselect output\:";puts""
 puts array1.select { |item| item.to_s.length > 2}
 
+puts "\nmy_all output\:";puts""
+puts array1.my_all { |item| item.to_s.length > 2 }
