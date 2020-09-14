@@ -85,6 +85,10 @@ puts ''; puts "my_all? output\:"; puts ''
 puts %w[lul what potatoes uhh].my_all? { |word| word.length >= 3 }
 puts ['lul', 'what', 'potatoes', 'uhh', nil].my_all?
 
+puts ''; puts "all? output\:"; puts ''
+puts %w[lul what potatoes uhh].all? { |word| word.length >= 3 }
+puts ['lul', 'what', 'potatoes', 'uhh', nil].all?
+
 puts "\nmy_any? output\:"; puts ''
 
 puts %w[ant bear cat].any? { |word| word.length >= 3 } #=> true
