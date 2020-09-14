@@ -38,14 +38,30 @@ module Enumerable
   #     return true
   #   end
   #   my_selection = self.my_select & block
-  #   return true if self == my_selection  
+  #   return true if self == my_selection
   #   false
   # end
-  
+  def my_any?
+    my_each do |i|
+      if yield(self[i] == true)
+        return true
+      else
+        return false
+      end
+    end
+    # my_each(arr) do |i|
+    #   if yield(arr[i] == true)
+    #    return true
+    #   else
+    #     return false
+    #   end
+    # end
+  end
 end
 
 include Enumerable
 array1 = ['hi', 34, 'potatoes', 'horses', 33]
+array2 = [1, 5, 6, 6, 3]
 
 puts "\nmy_each output\:"; puts ''
 array1.my_each { |item| puts item }
@@ -71,3 +87,12 @@ puts array1.select { |item| item.to_s.length > 2 }
 # puts "";puts "my_all? output\:";puts ""
 # p %W[lul what potatoes uhh].my_all? {|word| word.length >= 3}
 # puts (%w[lul what potatoes uhh nil].my_all? {|word| word.length >= 3})
+
+puts "\nmy_any? output\:"; puts ''
+
+puts %w[ant bear cat].any? { |word| word.length >= 3 } #=> true
+puts %w[ant bear cat].any? { |word| word.length >= 4 } #=> true
+puts %w[ant bear cat].any?(/d/)                        #=> false
+puts [nil, true, 99].any?(Integer)                     #=> true
+puts [nil, true, 99].any?                              #=> true
+puts [].any?                                           #=> false
