@@ -44,13 +44,8 @@ module Enumerable
     false
   end
 
-  def my_any?
-    my_each do |i|
-      if yield(self[i] == true)
-        return true
-      else
-        return false
-      end
+  def my_any?(&block)
+    !(self.my_none? &block)
     end
     # my_each(arr) do |i|
     #   if yield(arr[i] == true)
@@ -59,7 +54,7 @@ module Enumerable
     #     return false
     #   end
     # end
-  end
+  # end
 end
 
 include Enumerable
