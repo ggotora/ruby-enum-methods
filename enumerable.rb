@@ -87,21 +87,21 @@ puts [nil, false].any?
 
 puts ''; puts "\nmy_any? output\:"; puts ''
 puts %w[ant bear cat].my_any? { |word| word.length >= 3 }
-puts %w[ant bear cat].my_any? { |word| word.length >= 4}
+puts %w[ant bear cat].my_any? { |word| word.length >= 4 }
 puts [].my_any?
 puts [nil].my_any?
 puts [nil, false].my_any?
 
 puts ''; puts "\nmy_none? output\:"; puts ''
-puts %w[ant bear cat].my_none? { |word| word.length == 5}
-puts %w[ant bear cat].my_none? { |word| word.length >= 4}
+puts %w[ant bear cat].my_none? { |word| word.length == 5 }
+puts %w[ant bear cat].my_none? { |word| word.length >= 4 }
 puts [].my_none?
 puts [nil].my_none?
 puts [nil, false].my_none?
 
 puts ''; puts "\nnone? output\:"; puts ''
-puts %w[ant bear cat].none? { |word| word.length == 5}
-puts %w[ant bear cat].none? { |word| word.length >= 4}
+puts %w[ant bear cat].none? { |word| word.length == 5 }
+puts %w[ant bear cat].none? { |word| word.length >= 4 }
 puts [].none?
 puts [nil].none?
 puts [nil, false].none?
