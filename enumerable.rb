@@ -24,15 +24,6 @@ module Enumerable
     my_select
   end
 
-  # def my_all
-  #   all_el = true
-  #   self.my_each do ||
-  #      unless yield(item)
-  #        all_el = false
-  #     end
-  #   end
-  # end
-
   def my_all?(&block)
     unless block_given?
       my_each { |item| return false if item == false || item.nil? }
