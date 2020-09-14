@@ -1,3 +1,4 @@
+# rubocop : disable  Style/Semicolon, Lint/AmbiguousBlockAssociation, Style/MixinUsage
 module Enumerable
   def my_each
     return to_enum unless block_given?
@@ -33,12 +34,13 @@ module Enumerable
   # end
 
   def my_all?(&block)
-    if !(block_given?)
-      self.my_each { |item| return false if item == false || item == nil }
+    unless block_given?
+      my_each { |item| return false if item == false || item.nil? }
       return true
     end
     my_selection = my_select(&block)
     return true if self == my_selection
+
     false
   end
 
@@ -93,7 +95,9 @@ puts "\nmy_any? output\:"; puts ''
 
 puts %w[ant bear cat].any? { |word| word.length >= 3 } #=> true
 puts %w[ant bear cat].any? { |word| word.length >= 4 } #=> true
-puts %w[ant bear cat].any?(/d/)                        #=> false
-puts [nil, true, 99].any?(Integer)                     #=> true
-puts [nil, true, 99].any?                              #=> true
-puts [].any?                                           #=> false
+puts %w[ant bear cat].any?(/d/) #=> false
+puts [nil, true, 99].any?(Integer) #=> true
+puts [nil, true, 99].any? #=> true
+puts [].any? #=> false
+
+# rubocop : enable  Style/Semicolon, Lint/AmbiguousBlockAssociation, Style/MixinUsage
