@@ -1,4 +1,4 @@
-# rubocop : disable  Style/Semicolon, Lint/AmbiguousBlockAssociation, Style/MixinUsage
+# rubocop : disable  Style/Semicolon, Lint/AmbiguousBlockAssociation, Style/MixinUsage, Lint/UselessAssignment
 module Enumerable
   def my_each
     return to_enum unless block_given?
@@ -46,6 +46,15 @@ module Enumerable
     end
     my_each { |item| return false if yield(item) }
     true
+  end
+
+  def my_count(&block)
+    count = 0
+    unless block_given?
+      count = length
+      return count
+    end
+    count = my_select(&block).length
   end
 end
 
@@ -106,4 +115,14 @@ puts [].none?
 puts [nil].none?
 puts [nil, false].none?
 
-# rubocop : enable  Style/Semicolon, Lint/AmbiguousBlockAssociation, Style/MixinUsage
+puts ''; puts "\nmy_count output\:"; puts ''
+puts %w[ant bear cat].my_count
+puts %w[ant bear cat].my_count { |word| word.length >= 4 }
+puts [1, 2, 4, 2].count(&:even?)
+
+puts ''; puts "\ncount output\:"; puts ''
+puts %w[ant bear cat].count
+puts %w[ant bear cat].count { |word| word.length >= 4 }
+puts [1, 2, 4, 2].count(&:even?)
+
+# rubocop : enable  Style/Semicolon, Lint/AmbiguousBlockAssociation, Style/MixinUsage, Lint/UselessAssignment
