@@ -18,7 +18,6 @@ module Enumerable
 
   def my_select
     return to_enum unless block_given?
-
     my_select = []
     my_each { |item| my_select << item if yield item }
     my_select
@@ -55,6 +54,17 @@ module Enumerable
       return count
     end
     count = my_select(&block).length
+  end
+
+  def my_map(&proc)
+    array = self.to_a 
+    mapped_array = []
+    if !(block_given?)
+      mapped_array = array.to_enum
+      return mapped_array
+    end
+  array.my_each { |item| mapped_array << yield(item) }
+  mapped_array
   end
 end
 
@@ -125,4 +135,10 @@ puts %w[ant bear cat].count
 puts %w[ant bear cat].count { |word| word.length >= 4 }
 puts [1, 2, 4, 2].count(&:even?)
 
+testyproc = Proc.new { |i| i * i }
+
+puts ''; puts "\nmy_map output\:"; puts ''
+p (1..4).my_map { |i| i * i }      #=> [1, 4, 9, 16]
+p (1..4).my_map { "cat"  }   #=> ["cat", "cat", "cat", "cat"]
+p (1..4).my_map(&testyproc) 
 # rubocop : enable  Style/Semicolon, Lint/AmbiguousBlockAssociation, Style/MixinUsage, Lint/UselessAssignment
