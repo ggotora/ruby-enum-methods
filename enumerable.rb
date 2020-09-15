@@ -1,4 +1,5 @@
-# rubocop : disable  Style/Semicolon, Lint/AmbiguousBlockAssociation, Style/MixinUsage, Lint/UselessAssignment
+# rubocop : disable  Style/Semicolon, Lint/AmbiguousBlockAssociation, Style/MixinUsage, Lint/UselessAssignment, Lint/ParenthesesAsGroupedExpression
+
 module Enumerable
   def my_each
     return to_enum unless block_given?
@@ -88,9 +89,7 @@ module Enumerable
   def multiply_els(array)
     array.my_inject { |product, n| product * n }
   end
-
 end
-
 
 include Enumerable
 array1 = ['hi', 34, 'potatoes', 'horses', 33]
@@ -162,11 +161,11 @@ puts [1, 2, 4, 2].count(&:even?)
 testyproc = proc { |i| i * i }
 
 puts ''; puts "\nmy_map output\:"; puts ''
-p (1..4).my_map { |i| i * i } #=> [1, 4, 9, 16]
-p (1..4).my_map { 'cat' } #=> ["cat", "cat", "cat", "cat"]
+p(1..4).my_map { |i| i * i } #=> [1, 4, 9, 16]
+p(1..4).my_map { 'cat' } #=> ["cat", "cat", "cat", "cat"]
 p (1..4).my_map(&testyproc)
 
-longest = %w[ cat sheep bear ].my_inject do |memo, word|
+longest = %w[cat sheep bear].my_inject do |memo, word|
   memo.length > word.length ? memo : word
 end
 
@@ -175,7 +174,7 @@ puts ((5..10).my_inject { |sum, n| sum + n })
 puts (5..10).my_inject { |product, n| product * n }
 puts longest
 
-longest = %w[ cat sheep bear ].inject do |memo, word|
+longest = %w[cat sheep bear].inject do |memo, word|
   memo.length > word.length ? memo : word
 end
 
@@ -187,4 +186,4 @@ puts longest
 puts ''; puts "\nmultiply_els output\:"; puts ''
 puts multiply_els([2, 4, 5])
 
-# rubocop : enable  Style/Semicolon, Lint/AmbiguousBlockAssociation, Style/MixinUsage, Lint/UselessAssignment
+# rubocop : enable  Style/Semicolon, Lint/AmbiguousBlockAssociation, Style/MixinUsage, Lint/UselessAssignment, Lint/ParenthesesAsGroupedExpression
