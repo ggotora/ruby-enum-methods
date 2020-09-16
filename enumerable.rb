@@ -98,7 +98,7 @@ array2 = [2, 7, 8, 5]
 range = (5..10)
 puts "\nmy_each output\:"; puts ''
 array1.my_each { |item| puts item }
-p array2.my_each { |item|  item }
+array2.my_each { |item| puts item }
 range.my_each { |item| puts item}
 
 
