@@ -1,4 +1,4 @@
-# rubocop : disable  Style/Semicolon, Lint/AmbiguousBlockAssociation, Style/MixinUsage, Lint/UselessAssignment, Lint/Void
+# rubocop : disable  Style/Semicolon, Lint/AmbiguousBlockAssociation, Style/MixinUsage, Lint/UselessAssignment, Lint/Void, Metrics/PerceivedComplexity
 
 module Enumerable
   def my_each
@@ -221,4 +221,4 @@ hash.my_each_with_index { |item, index| puts "#{item} : #{index} " }
 # puts ''; puts "\nmultiply_els output\:"; puts ''
 # puts multiply_els([2, 4, 5])
 
-# rubocop : enable  Style/Semicolon, Lint/AmbiguousBlockAssociation, Style/MixinUsage, Lint/UselessAssignment, Lint/Void
+# rubocop : enable  Style/Semicolon, Lint/AmbiguousBlockAssociation, Style/MixinUsage, Lint/UselessAssignment, Lint/Void, Metrics/PerceivedComplexity
