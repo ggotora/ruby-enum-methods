@@ -2,21 +2,10 @@
 
 module Enumerable
   def my_each
-<<<<<<< HEAD
     for item in self
       yield(item)
     end
     self
-||||||| merged common ancestors
-    return to_enum unless block_given?
-
-    length.times { |index| yield(self[index]) }
-=======
-    for item in self 
-      yield(item)
-    end
-    self
->>>>>>> 6c88c1864fb5ccc878748c33724ca88c45d45724
   end
 
   def my_each_with_index
