@@ -79,7 +79,7 @@ module Enumerable
     count = my_select(&block).length
   end
 
-  def my_map()
+  def my_map()  
     array = to_a
     mapped_array = []
     unless block_given?
