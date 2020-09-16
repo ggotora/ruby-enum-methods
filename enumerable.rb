@@ -30,15 +30,31 @@ module Enumerable
     my_select
   end
 
-  def my_all?(&block)
-    unless block_given?
-      my_each { |item| return false if item == false || item.nil? }
-      return true
-    end
-    my_selection = my_select(&block)
-    return true if self == my_selection
+  def my_all?(parameter = nil)
+    return true if (self.class == Array && count.zero?) || (!block_given? &&
+        parameter.nil? && !include?(nil))
+    return false unless block_given? || !parameter.nil?
 
-    false
+    boolean = true
+    if self.class == Array
+      my_each do |n|
+        if block_given?
+          boolean = false unless yield(n)
+        elsif parameter.class == Regexp
+          boolean = false unless n.match(parameter)
+        elsif parameter.class <= Numeric
+          boolean = false unless n == parameter
+        else
+          boolean = false unless n.class <= parameter
+        end
+        break unless boolean
+      end
+    else
+      my_each do |key, value|
+        boolean = false unless yield(key, value)
+      end
+    end
+    boolean
   end
 
   def my_any?(&block)
@@ -103,7 +119,7 @@ hash = { a: 1, b: 2, c: 3, d: 4, e: 5 }
 range = (5..10)
 puts "\nmy_each output\:"; puts ''
 array1.my_each { |item| puts item }
-p array2.my_each { |item| item }
+p array2.each { |item| item }
 range.my_each { |item| puts item }
 hash.my_each { |item, index| puts "#{item} : #{index} " }
 
@@ -129,19 +145,29 @@ range.each_with_index { |item| puts item }
 # puts "\neach_with_index output\:"; puts ''
 # array1.each_with_index { |item, index| puts "#{item} : #{index} " }
 
-# puts "\nmy_select output\:"; puts ''
-# puts array1.my_select { |item| item.to_s.length > 2 }
+puts "\nmy_select output\:"; puts ''
+puts array1.my_select { |item| item.to_s.length > 2 }
+p array2.my_select { |item| item }
+range.my_select { |item| puts item }
 
-# puts "\nselect output\:"; puts ''
-# puts array1.select { |item| item.to_s.length > 2 }
+puts "\nselect output\:"; puts ''
+puts array1.select { |item| item.to_s.length > 2 }
+p array2.select { |item| item }
+range.my_select { |item| puts item }
 
-# puts ''; puts "my_all? output\:"; puts ''
-# puts %w[lul what potatoes uhh].my_all? { |word| word.length >= 3 }
-# puts ['lul', 'what', 'potatoes', 'uhh', nil].my_all?
+puts ''; puts "\nmy_all? output\:"; puts ''
+puts (%w[lul what potatoes uhh].my_all? { |word| word.length >= 3 })
+puts (['lul', 'what', 'potatoes', 'uhh', nil].my_all?)
+puts ([1, 2, 3].my_all?(Integer))
+puts (['hi', 'hello', 'hey'].my_all?(/d/))
+puts ([3, 3, 3].my_all?(3))
 
-# puts ''; puts "all? output\:"; puts ''
-# puts %w[lul what potatoes uhh].all? { |word| word.length >= 3 }
-# puts ['lul', 'what', 'potatoes', 'uhh', nil].all?
+puts ''; puts "\nall? output\:"; puts ''
+puts (%w[lul what potatoes uhh].all? { |word| word.length >= 3 })
+puts (['lul', 'what', 'potatoes', 'uhh', nil].all?)
+puts ([1, 2, 3].all?(Integer))
+puts (['hi', 'hello', 'hey'].all?(/d/))
+puts ([3, 3, 3].all?(3))
 
 # puts ''; puts "\nany? output\:"; puts ''
 # puts %w[ant bear cat].any? { |word| word.length >= 3 }
@@ -153,9 +179,13 @@ range.each_with_index { |item| puts item }
 # puts ''; puts "\nmy_any? output\:"; puts ''
 # puts %w[ant bear cat].my_any? { |word| word.length >= 3 }
 # puts %w[ant bear cat].my_any? { |word| word.length >= 4 }
+# puts range.my_any?
 # puts [].my_any?
 # puts [nil].my_any?
 # puts [nil, false].my_any?
+# puts ([1, 2, 3].my_any?(Integer))
+# puts (['hi', 'hello', 'hey'].my_any?(/d/))
+# puts ([3, 3, 3].my_any?(3))
 
 # puts ''; puts "\nmy_none? output\:"; puts ''
 # puts %w[ant bear cat].my_none? { |word| word.length == 5 }
