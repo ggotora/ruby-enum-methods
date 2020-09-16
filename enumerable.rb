@@ -1,9 +1,10 @@
 # rubocop : disable  Style/Semicolon, Lint/AmbiguousBlockAssociation, Style/MixinUsage, Lint/UselessAssignment
 module Enumerable
   def my_each
-    return to_enum unless block_given?
-
-    length.times { |index| yield(self[index]) }
+    for item in self
+      yield(item)
+    end
+    self
   end
 
   def my_each_with_index
@@ -94,15 +95,20 @@ end
 
 include Enumerable
 array1 = ['hi', 34, 'potatoes', 'horses', 33]
-
+array2 = [2, 7, 8, 5]
+range = (5..10)
 puts "\nmy_each output\:"; puts ''
 array1.my_each { |item| puts item }
+p array2.my_each { |item|  item }
+range.my_each { |item| puts item}
+
 
 puts "\neach output\:"; puts ''
 array1.each { |item| puts item }
 
 puts "\nmy_each_with_index output\:"; puts ''
 array1.my_each_with_index { |item, index| puts "#{item} : #{index} " }
+
 
 puts "\neach_with_index output\:"; puts ''
 array1.each_with_index { |item, index| puts "#{item} : #{index} " }
