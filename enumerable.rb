@@ -71,11 +71,13 @@ module Enumerable
     end
     boolean
   end
+  
 
   def my_any?(argument = nil)
     return false if (self.class == Array && count.zero?) || (!block_given? &&
         argument.nil? && !include?(true))
     return true unless block_given? || !argument.nil?
+
     boolean = false
     if self.class == Array
       my_each do |n|
@@ -93,34 +95,37 @@ module Enumerable
       my_each do |key, value|
         boolean = true if yield(key, value)
       end
-      boolean
     end
 
-    def my_none?(argument = nil)
-      return true if count.zero? || (self[0].nil? && !include?(true))
-      return false unless block_given? || !argument.nil?
-      boolean = true
-      if self.class == Array
-        my_each do |n|
-          if block_given?
-            boolean = false if yield(n)
-          elsif argument.class == Regexp
-            boolean = false if n.match(argument)
-          elsif argument.class <= Numeric
-            boolean = false if n == argument
-          elsif n.class <= argument
-            boolean = false
-          end
-          break unless boolean
+    boolean
+  end
+
+  def my_none?(argument = nil)
+    return true if count.zero? || (self[0].nil? && !include?(true))
+    return false unless block_given? || !argument.nil?
+
+    boolean = true
+    if self.class == Array
+      my_each do |n|
+        if block_given?
+          boolean = false if yield(n)
+        elsif argument.class == Regexp
+          boolean = false if n.match(argument)
+        elsif argument.class <= Numeric
+          boolean = false if n == argument
+        elsif n.class <= argument
+          boolean = false
         end
-      else
-        my_each do |key, value|
-          boolean = false if yield(key, value)
-          break unless boolean
-        end
+        break unless boolean
       end
-      boolean
+    else
+      my_each do |key, value|
+        boolean = false if yield(key, value)
+        break unless boolean
+      end
     end
+    boolean
+  end
 
   def my_count(&block)
     count = 0
@@ -221,20 +226,24 @@ puts ([3, 3, 3].all?(3))
 puts ''; puts "\nany? output\:"; puts ''
 puts %w[ant bear cat].any? { |word| word.length >= 3 }
 puts %w[ant bear cat].any? { |word| word.length >= 4 }
+puts range.any?
 puts [].any?
 puts [nil].any?
 puts [nil, false].any?
+puts ([1, 2, 3].any?(Integer))
+puts (['hi', 'hello', 'hey'].any?(/d/))
+puts ([3, 3, 3].any?(3))
 
 puts ''; puts "\nmy_any? output\:"; puts ''
 puts %w[ant bear cat].my_any? { |word| word.length >= 3 }
 puts %w[ant bear cat].my_any? { |word| word.length >= 4 }
-puts "#{range.my_any?} 1"
-puts "#{[].my_any?} 2"
-puts "#{[nil].my_any?} 3"
-puts "#{[nil, false].my_any?} 4"
-puts "#{([1, 2, 3].my_any?(Integer))} 5"
-# puts "#{(['hi', 'hello', 'hey'].my_any?(/d/))} 6"
-# puts ([3, 3, 3].my_any?(3))
+puts range.my_any?
+puts [].my_any?
+puts [nil].my_any?
+puts [nil, false].my_any?
+puts ([1, 2, 3].my_any?(Integer))
+puts (['hi', 'hello', 'hey'].my_any?(/d/))
+puts ([3, 3, 3].my_any?(3))
 
 # puts ''; puts "\nmy_none? output\:"; puts ''
 # puts %w[ant bear cat].my_none? { |word| word.length == 5 }
@@ -288,4 +297,4 @@ puts "#{([1, 2, 3].my_any?(Integer))} 5"
 # puts ''; puts "\nmultiply_els output\:"; puts ''
 # puts multiply_els([2, 4, 5])
 
-# rubocop : enable  Style/Semicolon, Lint/AmbiguousBlockAssociation, Style/MixinUsage, Lint/UselessAssignment, Lint/Void, Metrics/PerceivedComplexity, Lint/Syntax
+# rubocop : enable  Style/Semicolon, Lint/AmbiguousBlockAssociation, Style/MixinUsage, Lint/UselessAssignment, Lint/Void, Lint/Syntax, Metrics/PerceivedComplexity
