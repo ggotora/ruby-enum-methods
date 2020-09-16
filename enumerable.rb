@@ -10,12 +10,16 @@ module Enumerable
 
   def my_each_with_index
     return to_enum unless block_given?
-
-    i = 0
-    while i < length
-      yield(self[i], i)
+    for item in self
+      i = 0
+      yield(item, self[i])
       i += 1
     end
+    # i = 0
+    # while i < length
+    #   yield(self[i], i)
+    #   i += 1
+    # end
   end
 
   def my_select
@@ -109,8 +113,18 @@ p array2.each { |item| item }
 range.each { |item| puts item }
 hash.each { |item, index| puts "#{item} : #{index} " }
 
-# puts "\nmy_each_with_index output\:"; puts ''
-# array1.my_each_with_index { |item, index| puts "#{item} : #{index} " }
+puts "\nmy_each_with_index output\:"; puts ''
+array1.my_each_with_index { |item, index| puts "#{item} : #{index} " }
+hash.my_each_with_index { |item, index| puts "#{item} : #{index} " }
+array2.my_each_with_index { |item| item }
+range.my_each_with_index { |item| puts item }
+
+
+puts "\neach_with_index output\:"; puts ''
+array1.each_with_index { |item, index| puts "#{item} : #{index} " }
+hash.each_with_index { |item, index| puts "#{item} : #{index} " }
+array2.each_with_index { |item| item }
+range.each_with_index { |item| puts item }
 
 # puts "\neach_with_index output\:"; puts ''
 # array1.each_with_index { |item, index| puts "#{item} : #{index} " }
