@@ -1,8 +1,8 @@
-# rubocop : disable  Style/Semicolon, Lint/AmbiguousBlockAssociation, Style/MixinUsage, Lint/UselessAssignment, Lint/ParenthesesAsGroupedExpression
+# rubocop : disable  Style/Semicolon, Lint/AmbiguousBlockAssociation, Style/MixinUsage, Lint/UselessAssignment, Lint/Void
 
 module Enumerable
   def my_each
-    for item in self
+    each do |item|
       yield(item)
     end
     self
@@ -95,101 +95,104 @@ end
 include Enumerable
 array1 = ['hi', 34, 'potatoes', 'horses', 33]
 array2 = [2, 7, 8, 5]
+hash = { a: 1, b: 2, c: 3, d: 4, e: 5 }
 range = (5..10)
 puts "\nmy_each output\:"; puts ''
 array1.my_each { |item| puts item }
-array2.my_each { |item| puts item }
-range.my_each { |item| puts item}
-
+p array2.my_each { |item| item }
+range.my_each { |item| puts item }
+hash.my_each { |item, index| puts "#{item} : #{index} " }
 
 puts "\neach output\:"; puts ''
 array1.each { |item| puts item }
+p array2.each { |item| item }
+range.each { |item| puts item }
+hash.each { |item, index| puts "#{item} : #{index} " }
 
-puts "\nmy_each_with_index output\:"; puts ''
-array1.my_each_with_index { |item, index| puts "#{item} : #{index} " }
+# puts "\nmy_each_with_index output\:"; puts ''
+# array1.my_each_with_index { |item, index| puts "#{item} : #{index} " }
 
+# puts "\neach_with_index output\:"; puts ''
+# array1.each_with_index { |item, index| puts "#{item} : #{index} " }
 
-puts "\neach_with_index output\:"; puts ''
-array1.each_with_index { |item, index| puts "#{item} : #{index} " }
+# puts "\nmy_select output\:"; puts ''
+# puts array1.my_select { |item| item.to_s.length > 2 }
 
-puts "\nmy_select output\:"; puts ''
-puts array1.my_select { |item| item.to_s.length > 2 }
+# puts "\nselect output\:"; puts ''
+# puts array1.select { |item| item.to_s.length > 2 }
 
-puts "\nselect output\:"; puts ''
-puts array1.select { |item| item.to_s.length > 2 }
+# puts ''; puts "my_all? output\:"; puts ''
+# puts %w[lul what potatoes uhh].my_all? { |word| word.length >= 3 }
+# puts ['lul', 'what', 'potatoes', 'uhh', nil].my_all?
 
-puts ''; puts "my_all? output\:"; puts ''
-puts %w[lul what potatoes uhh].my_all? { |word| word.length >= 3 }
-puts ['lul', 'what', 'potatoes', 'uhh', nil].my_all?
+# puts ''; puts "all? output\:"; puts ''
+# puts %w[lul what potatoes uhh].all? { |word| word.length >= 3 }
+# puts ['lul', 'what', 'potatoes', 'uhh', nil].all?
 
-puts ''; puts "all? output\:"; puts ''
-puts %w[lul what potatoes uhh].all? { |word| word.length >= 3 }
-puts ['lul', 'what', 'potatoes', 'uhh', nil].all?
+# puts ''; puts "\nany? output\:"; puts ''
+# puts %w[ant bear cat].any? { |word| word.length >= 3 }
+# puts %w[ant bear cat].any? { |word| word.length >= 4 }
+# puts [].any?
+# puts [nil].any?
+# puts [nil, false].any?
 
-puts ''; puts "\nany? output\:"; puts ''
-puts %w[ant bear cat].any? { |word| word.length >= 3 }
-puts %w[ant bear cat].any? { |word| word.length >= 4 }
-puts [].any?
-puts [nil].any?
-puts [nil, false].any?
+# puts ''; puts "\nmy_any? output\:"; puts ''
+# puts %w[ant bear cat].my_any? { |word| word.length >= 3 }
+# puts %w[ant bear cat].my_any? { |word| word.length >= 4 }
+# puts [].my_any?
+# puts [nil].my_any?
+# puts [nil, false].my_any?
 
-puts ''; puts "\nmy_any? output\:"; puts ''
-puts %w[ant bear cat].my_any? { |word| word.length >= 3 }
-puts %w[ant bear cat].my_any? { |word| word.length >= 4 }
-puts [].my_any?
-puts [nil].my_any?
-puts [nil, false].my_any?
+# puts ''; puts "\nmy_none? output\:"; puts ''
+# puts %w[ant bear cat].my_none? { |word| word.length == 5 }
+# puts %w[ant bear cat].my_none? { |word| word.length >= 4 }
+# puts [].my_none?
+# puts [nil].my_none?
+# puts [nil, false].my_none?
 
-puts ''; puts "\nmy_none? output\:"; puts ''
-puts %w[ant bear cat].my_none? { |word| word.length == 5 }
-puts %w[ant bear cat].my_none? { |word| word.length >= 4 }
-puts [].my_none?
-puts [nil].my_none?
-puts [nil, false].my_none?
+# puts ''; puts "\nnone? output\:"; puts ''
+# puts %w[ant bear cat].none? { |word| word.length == 5 }
+# puts %w[ant bear cat].none? { |word| word.length >= 4 }
+# puts [].none?
+# puts [nil].none?
+# puts [nil, false].none?
 
-puts ''; puts "\nnone? output\:"; puts ''
-puts %w[ant bear cat].none? { |word| word.length == 5 }
-puts %w[ant bear cat].none? { |word| word.length >= 4 }
-puts [].none?
-puts [nil].none?
-puts [nil, false].none?
+# puts ''; puts "\nmy_count output\:"; puts ''
+# puts %w[ant bear cat].my_count
+# puts %w[ant bear cat].my_count { |word| word.length >= 4 }
+# puts [1, 2, 4, 2].count(&:even?)
 
-puts ''; puts "\nmy_count output\:"; puts ''
-puts %w[ant bear cat].my_count
-puts %w[ant bear cat].my_count { |word| word.length >= 4 }
-puts [1, 2, 4, 2].count(&:even?)
+# puts ''; puts "\ncount output\:"; puts ''
+# puts %w[ant bear cat].count
+# puts %w[ant bear cat].count { |word| word.length >= 4 }
+# puts [1, 2, 4, 2].count(&:even?)
 
-puts ''; puts "\ncount output\:"; puts ''
-puts %w[ant bear cat].count
-puts %w[ant bear cat].count { |word| word.length >= 4 }
-puts [1, 2, 4, 2].count(&:even?)
+# testyproc = proc { |i| i * i }
 
-testyproc = proc { |i| i * i }
+# puts ''; puts "\nmy_map output\:"; puts ''
+# p(1..4).my_map { |i| i * i } #=> [1, 4, 9, 16]
+# p(1..4).my_map { 'cat' } #=> ["cat", "cat", "cat", "cat"]
+# p (1..4).my_map(&testyproc)
 
-puts ''; puts "\nmy_map output\:"; puts ''
-p(1..4).my_map { |i| i * i } #=> [1, 4, 9, 16]
-p(1..4).my_map { 'cat' } #=> ["cat", "cat", "cat", "cat"]
-p (1..4).my_map(&testyproc)
+# longest = %w[cat sheep bear].my_inject do |memo, word|
+#   memo.length > word.length ? memo : word
+# end
 
-longest = %w[cat sheep bear].my_inject do |memo, word|
-  memo.length > word.length ? memo : word
-end
+# puts ''; puts "\nmy_inject output\:"; puts ''
+# puts ((5..10).my_inject { |sum, n| sum + n })
+# puts (5..10).my_inject { |product, n| product * n }
+# puts longest
 
-puts ''; puts "\nmy_inject output\:"; puts ''
-puts ((5..10).my_inject { |sum, n| sum + n })
-puts (5..10).my_inject { |product, n| product * n }
-puts longest
+# longest = %w[cat sheep bear].inject do |memo, word|
+#   memo.length > word.length ? memo : word
+# end
 
-longest = %w[cat sheep bear].inject do |memo, word|
-  memo.length > word.length ? memo : word
-end
+# puts ''; puts "\ninject output\:"; puts ''
+# puts ((5..10).inject { |sum, n| sum + n })
+# puts (5..10).inject { |product, n| product * n }
+# puts longest
 
-puts ''; puts "\ninject output\:"; puts ''
-puts ((5..10).inject { |sum, n| sum + n })
-puts (5..10).inject { |product, n| product * n }
-puts longest
+# puts ''; puts "\nmultiply_els output\:"; puts ''
+# puts multiply_els([2, 4, 5])
 
-puts ''; puts "\nmultiply_els output\:"; puts ''
-puts multiply_els([2, 4, 5])
-
-# rubocop : enable  Style/Semicolon, Lint/AmbiguousBlockAssociation, Style/MixinUsage, Lint/UselessAssignment, Lint/ParenthesesAsGroupedExpression
+# rubocop : enable  Style/Semicolon, Lint/AmbiguousBlockAssociation, Style/MixinUsage, Lint/UselessAssignment, Lint/Void
