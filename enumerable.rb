@@ -1,25 +1,40 @@
-# rubocop : disable  Style/Semicolon, Lint/AmbiguousBlockAssociation, Style/MixinUsage, Lint/UselessAssignment, Lint/Void
+# rubocop : disable  Style/Semicolon, Lint/AmbiguousBlockAssociation, Style/MixinUsage, Lint/UselessAssignment, Lint/Void, Metrics/PerceivedComplexity
 
 module Enumerable
   def my_each
-    each do |item|
-      yield(item)
+    # An enumerator is returned if no block is given
+    return to_enum unless block_given?
+
+    i = 0
+    self_class = self.class
+    array = if self_class == Array
+              self
+            elsif self_class == Range
+              to_a
+            else
+              flatten
+            end
+    while i < array.length
+      if self_class == Hash
+        yield(array[i], array[i + 1])
+        i += 2
+      else
+        yield(array[i])
+        i += 1
+      end
     end
-    self
   end
 
   def my_each_with_index
+    # If no block is given, an enumerator is returned instead.
     return to_enum unless block_given?
-    for item in self
-      i = 0
-      yield(item, self[i])
+
+    array = self.class == Array ? self : to_a
+    i = 0
+    while i < length
+      yield(array[i], i)
       i += 1
     end
-    # i = 0
-    # while i < length
-    #   yield(self[i], i)
-    #   i += 1
-    # end
   end
 
   def my_select
@@ -117,6 +132,7 @@ array1 = ['hi', 34, 'potatoes', 'horses', 33]
 array2 = [2, 7, 8, 5]
 hash = { a: 1, b: 2, c: 3, d: 4, e: 5 }
 range = (5..10)
+
 puts "\nmy_each output\:"; puts ''
 array1.my_each { |item| puts item }
 p array2.each { |item| item }
@@ -131,19 +147,15 @@ hash.each { |item, index| puts "#{item} : #{index} " }
 
 puts "\nmy_each_with_index output\:"; puts ''
 array1.my_each_with_index { |item, index| puts "#{item} : #{index} " }
+p array2.my_each_with_index { |item, index| "#{item} : #{index} " }
+range.each { |item| puts item }
 hash.my_each_with_index { |item, index| puts "#{item} : #{index} " }
-array2.my_each_with_index { |item| item }
-range.my_each_with_index { |item| puts item }
-
 
 puts "\neach_with_index output\:"; puts ''
 array1.each_with_index { |item, index| puts "#{item} : #{index} " }
-hash.each_with_index { |item, index| puts "#{item} : #{index} " }
-array2.each_with_index { |item| item }
-range.each_with_index { |item| puts item }
-
-# puts "\neach_with_index output\:"; puts ''
-# array1.each_with_index { |item, index| puts "#{item} : #{index} " }
+p array2.each_with_index { |item, index| "#{item} : #{index} " }
+range.each { |item| puts item }
+hash.my_each_with_index { |item, index| puts "#{item} : #{index} " }
 
 puts "\nmy_select output\:"; puts ''
 puts array1.my_select { |item| item.to_s.length > 2 }
@@ -239,4 +251,4 @@ puts ([3, 3, 3].all?(3))
 # puts ''; puts "\nmultiply_els output\:"; puts ''
 # puts multiply_els([2, 4, 5])
 
-# rubocop : enable  Style/Semicolon, Lint/AmbiguousBlockAssociation, Style/MixinUsage, Lint/UselessAssignment, Lint/Void
+# rubocop : enable  Style/Semicolon, Lint/AmbiguousBlockAssociation, Style/MixinUsage, Lint/UselessAssignment, Lint/Void, Metrics/PerceivedComplexity
