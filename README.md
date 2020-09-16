@@ -27,11 +27,6 @@ Add your new methods onto the existing Enumerable module
 13. Modify your `#my_map` method to take a proc instead.
 14. Modify your `#my_map` method to take either a proc or a block. It won't be necessary to apply both a proc and a block in the same `#my_map` call since you could get the same effect by chaining together one `#my_map` call with the block and one with the proc. This approach is also clearer, since the user doesn't have to remember whether the proc or block will be run first. So if both a proc and a block are given, only execute the proc.
       
-### 🎬 Demonstration
-
-<a href="bubble_sort.gif" target="_blank"> <img alt="Demonstration" src="bubble_sort.gif"/></a>
-
-
 ## 🔨 Built in
 
 - Ruby
@@ -40,10 +35,10 @@ Add your new methods onto the existing Enumerable module
 
 ## 🚀 Our Project
 
-Our project can be found at https://repl.it/@zerradi/bubblesort#main.rb
+Our project can be found at https://repl.it/@zerradi/MyEnumerableRuby#main.rb
 ## Live Demo
 
-[Live Demo Link](https://repl.it/@zerradi/bubblesort#main.rb)
+[Live Demo Link](https://repl.it/@zerradi/MyEnumerableRuby#main.rb)
 
 
 ## 👨🏽‍💻 👨🏿‍💻 Creators
