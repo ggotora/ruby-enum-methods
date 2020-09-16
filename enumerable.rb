@@ -72,9 +72,29 @@ module Enumerable
     boolean
   end
 
-  def my_any?(&block)
-    !my_none?(&block)
-  end
+  def my_any?(argument = nil)
+    return false if (self.class == Array && count.zero?) || (!block_given? &&
+        argument.nil? && !include?(true))
+    return true unless block_given? || !argument.nil?
+    boolean = false
+    if self.class == Array
+      my_each do |n|
+        if block_given?
+          boolean = true if yield(n)
+        elsif argument.class == Regexp
+          boolean = true if n.match(argument)
+        elsif argument.class == String
+          boolean = true if n == argument
+        elsif n.class <= argument
+          boolean = true
+        end
+      end
+    else
+      my_each do |key, value|
+        boolean = true if yield(key, value)
+      end
+      boolean
+    end
 
   def my_none?
     unless block_given?
@@ -181,22 +201,22 @@ puts ([1, 2, 3].all?(Integer))
 puts (['hi', 'hello', 'hey'].all?(/d/))
 puts ([3, 3, 3].all?(3))
 
-# puts ''; puts "\nany? output\:"; puts ''
-# puts %w[ant bear cat].any? { |word| word.length >= 3 }
-# puts %w[ant bear cat].any? { |word| word.length >= 4 }
-# puts [].any?
-# puts [nil].any?
-# puts [nil, false].any?
+puts ''; puts "\nany? output\:"; puts ''
+puts %w[ant bear cat].any? { |word| word.length >= 3 }
+puts %w[ant bear cat].any? { |word| word.length >= 4 }
+puts [].any?
+puts [nil].any?
+puts [nil, false].any?
 
-# puts ''; puts "\nmy_any? output\:"; puts ''
-# puts %w[ant bear cat].my_any? { |word| word.length >= 3 }
-# puts %w[ant bear cat].my_any? { |word| word.length >= 4 }
-# puts range.my_any?
-# puts [].my_any?
-# puts [nil].my_any?
-# puts [nil, false].my_any?
-# puts ([1, 2, 3].my_any?(Integer))
-# puts (['hi', 'hello', 'hey'].my_any?(/d/))
+puts ''; puts "\nmy_any? output\:"; puts ''
+puts %w[ant bear cat].my_any? { |word| word.length >= 3 }
+puts %w[ant bear cat].my_any? { |word| word.length >= 4 }
+puts "#{range.my_any?} 1"
+puts "#{[].my_any?} 2"
+puts "#{[nil].my_any?} 3"
+puts "#{[nil, false].my_any?} 4"
+puts "#{([1, 2, 3].my_any?(Integer))} 5"
+# puts "#{(['hi', 'hello', 'hey'].my_any?(/d/))} 6"
 # puts ([3, 3, 3].my_any?(3))
 
 # puts ''; puts "\nmy_none? output\:"; puts ''
