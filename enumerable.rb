@@ -96,14 +96,31 @@ module Enumerable
       boolean
     end
 
-  def my_none?
-    unless block_given?
-      my_each { |item| return false if item }
-      return true
+    def my_none?(argument = nil)
+      return true if count.zero? || (self[0].nil? && !include?(true))
+      return false unless block_given? || !argument.nil?
+      boolean = true
+      if self.class == Array
+        my_each do |n|
+          if block_given?
+            boolean = false if yield(n)
+          elsif argument.class == Regexp
+            boolean = false if n.match(argument)
+          elsif argument.class <= Numeric
+            boolean = false if n == argument
+          elsif n.class <= argument
+            boolean = false
+          end
+          break unless boolean
+        end
+      else
+        my_each do |key, value|
+          boolean = false if yield(key, value)
+          break unless boolean
+        end
+      end
+      boolean
     end
-    my_each { |item| return false if yield(item) }
-    true
-  end
 
   def my_count(&block)
     count = 0
