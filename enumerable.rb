@@ -73,58 +73,40 @@ module Enumerable
   end
   
 
-  def my_any?(argument = nil)
-    return false if (self.class == Array && count.zero?) || (!block_given? &&
-        argument.nil? && !include?(true))
-    return true unless block_given? || !argument.nil?
-
-    boolean = false
-    if self.class == Array
-      my_each do |n|
-        if block_given?
-          boolean = true if yield(n)
-        elsif argument.class == Regexp
-          boolean = true if n.match(argument)
-        elsif argument.class == String
-          boolean = true if n == argument
-        elsif n.class <= argument
-          boolean = true
-        end
-      end
-    else
-      my_each do |key, value|
-        boolean = true if yield(key, value)
-      end
+  def my_any?(obj = nil)
+    result = false
+    if obj.nil? && !block_given?
+      my_each { |i| return !result if i == true }
+    elsif !obj.nil? && obj.is_a?(Class)
+      my_each { |i| return !result if i.is_a?(obj) }
+    elsif obj.is_a? String
+      my_each { |i| return !result if obj.match?(i) }
+    elsif obj.is_a? Integer
+      my_each { |i| return !result if i == obj }
+    elsif !obj.nil? && obj.is_a?(Regexp) || obj.is_a?(String)
+      my_each { |i| return !result if i.match(obj) }
+    elsif block_given?
+      my_each { |i| return !result if yield(i) }
     end
-
-    boolean
+    result
   end
 
-  def my_none?(argument = nil)
-    return true if count.zero? || (self[0].nil? && !include?(true))
-    return false unless block_given? || !argument.nil?
-
-    boolean = true
-    if self.class == Array
-      my_each do |n|
-        if block_given?
-          boolean = false if yield(n)
-        elsif argument.class == Regexp
-          boolean = false if n.match(argument)
-        elsif argument.class <= Numeric
-          boolean = false if n == argument
-        elsif n.class <= argument
-          boolean = false
-        end
-        break unless boolean
-      end
-    else
-      my_each do |key, value|
-        boolean = false if yield(key, value)
-        break unless boolean
-      end
+  def my_none?(obj = nil)
+    result = true
+    if obj.nil? && !block_given?
+      my_each { |i| return !result if i.nil? || !i }
+    elsif !obj.nil? && obj.is_a?(Class)
+      my_each { |i| return !result if i.is_a?(obj) }
+    elsif obj.is_a?(String) && !is_a?(Range)
+      my_each { |i| return !result if i.match?(obj) }
+    elsif obj.is_a? Integer
+      my_each { |i| return !result if i == obj }
+    elsif !obj.nil? && obj.is_a?(Regexp) || obj.is_a?(String)
+      my_each { |i| return !result if i.match(obj) }
+    elsif block_given?
+      my_each { |i| return !result if yield(i) }
     end
-    boolean
+    result
   end
 
   def my_count(&block)
@@ -245,12 +227,27 @@ puts ([1, 2, 3].my_any?(Integer))
 puts (['hi', 'hello', 'hey'].my_any?(/d/))
 puts ([3, 3, 3].my_any?(3))
 
-# puts ''; puts "\nmy_none? output\:"; puts ''
-# puts %w[ant bear cat].my_none? { |word| word.length == 5 }
-# puts %w[ant bear cat].my_none? { |word| word.length >= 4 }
-# puts [].my_none?
-# puts [nil].my_none?
-# puts [nil, false].my_none?
+puts ''; puts "\nmy_none? output\:"; puts ''
+puts %w[ant bear cat].my_none? { |word| word.length == 5 }
+puts %w[ant bear cat].my_none? { |word| word.length >= 4 }
+puts range.my_none?
+puts [].my_none?
+puts [nil].my_none?
+puts [nil, false].my_none?
+puts [1, 2, 3].my_none?(String)
+puts ['hi', 'hello', 'hey'].my_none?(/d/) #false
+puts [3, 3, 3].my_none?(3)
+
+puts ''; puts "\nnone? output\:"; puts ''
+puts %w[ant bear cat].none? { |word| word.length == 5 }
+puts %w[ant bear cat].none? { |word| word.length >= 4 }
+puts range.none?
+puts [].none?
+puts [nil].none?
+puts [nil, false].none?
+puts [1, 2, 3].none?(String)
+puts ['hi', 'hello', 'hey'].none?(/d/) # true
+puts [3, 3, 3].none?(3)
 
 # puts ''; puts "\nnone? output\:"; puts ''
 # puts %w[ant bear cat].none? { |word| word.length == 5 }
