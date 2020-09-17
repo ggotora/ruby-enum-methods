@@ -1,4 +1,4 @@
-# rubocop : disable  Style/Semicolon, Lint/AmbiguousBlockAssociation, Style/MixinUsage, Lint/Void, Metrics/PerceivedComplexity, Layout/EmptyLineBetweenDefs, Metrics/CyclomaticComplexity, Layout/TrailingWhitespace, Metrics/AbcSize,  Metrics/MethodLength,  Lint/ParenthesesAsGroupedExpression,  Style/RedundantParentheses, Metrics/ModuleLength
+# rubocop : disable  Style/Semicolon, Lint/AmbiguousBlockAssociation, Style/MixinUsage, Lint/Void, Metrics/PerceivedComplexity, Layout/EmptyLineBetweenDefs, Metrics/CyclomaticComplexity, Layout/TrailingWhitespace, Metrics/MethodLength,  Lint/ParenthesesAsGroupedExpression,  Style/RedundantParentheses, Metrics/ModuleLength
 
 module Enumerable
   def my_each
@@ -355,4 +355,4 @@ puts longest
 puts ''; puts "\nmultiply_els output\:"; puts ''
 puts multiply_els([2, 4, 5])
 
-# rubocop : enable  Style/Semicolon, Lint/AmbiguousBlockAssociation, Style/MixinUsage, Lint/Void, Metrics/PerceivedComplexity, Layout/EmptyLineBetweenDefs, Metrics/CyclomaticComplexity, Layout/TrailingWhitespace, Metrics/AbcSize,  Metrics/MethodLength,  Lint/ParenthesesAsGroupedExpression,  Style/RedundantParentheses, Metrics/ModuleLength
+# rubocop : enable  Style/Semicolon, Lint/AmbiguousBlockAssociation, Style/MixinUsage, Lint/Void, Metrics/PerceivedComplexity, Layout/EmptyLineBetweenDefs, Metrics/CyclomaticComplexity, Layout/TrailingWhitespace, Metrics/MethodLength,  Lint/ParenthesesAsGroupedExpression,  Style/RedundantParentheses, Metrics/ModuleLength
