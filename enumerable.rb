@@ -1,4 +1,4 @@
-# rubocop : disable  Style/Semicolon, Lint/AmbiguousBlockAssociation, Style/MixinUsage, Lint/UselessAssignment, Lint/Void, Metrics/PerceivedComplexity, Lint/Syntax
+# rubocop : disable  Style/Semicolon, Lint/AmbiguousBlockAssociation, Style/MixinUsage, Lint/Void, Metrics/PerceivedComplexity, Layout/EmptyLineBetweenDefs, Metrics/CyclomaticComplexity, Layout/TrailingWhitespace, Metrics/AbcSize,  Metrics/MethodLength,  Lint/ParenthesesAsGroupedExpression,  Style/RedundantParentheses, Metrics/ModuleLength
 
 module Enumerable
   def my_each
@@ -132,25 +132,84 @@ module Enumerable
     mapped_array
   end
 
-  def my_inject(*arguments)
-    array = to_a
-    if arguments.length.positive? && arguments[0].class != Symbol
-      accumulator = arguments[0]
-      array.my_each { |item| accumulator = yield(accumulator, item) }
-
-    elsif arguments.length.zero?
-      accumulator = to_a[0]
-      array[1..-1].my_each { |item| accumulator = yield(accumulator, item) }
-    elsif arguments[0].class == Symbol
-      accumulator = to_a[0]
-      operation = arguments[0]
-      array[1..-1].my_each { |item| accumulator = accumulator.send(operation, item) }
+  def my_inject(symbol = nil, initial_value = nil)
+    if symbol.class != Symbol
+      temp = symbol
+      symbol = initial_value
+      initial_value = temp
     end
-    accumulator
+    value_provided = false
+    value_provided = true unless initial_value.nil?
+    memo = initial_value || first
+    case symbol
+    when :+
+      if !value_provided
+        drop(1).my_each do |n|
+          memo += n
+        end
+      else
+        my_each do |n|
+          memo += n
+        end
+      end
+    when :*
+      if !value_provided
+        drop(1).my_each do |n|
+          memo *= n
+        end
+      else
+        my_each do |n|
+          memo *= n
+        end
+      end
+    when :/
+      if !value_provided
+        drop(1).my_each do |n|
+          memo /= n
+        end
+      else
+        my_each do |n|
+          memo /= n
+        end
+      end
+    when :-
+      if !value_provided
+        drop(1).my_each do |n|
+          memo -= n
+        end
+      else
+        my_each do |n|
+          memo -= n
+        end
+      end
+    when :**
+      if !value_provided
+        drop(1).my_each do |n|
+          memo **= n
+        end
+      else
+        my_each do |n|
+          memo **= n
+        end
+      end
+    else
+      if !value_provided
+        drop(1).my_each do |n|
+          memo = yield(memo, n)
+        end
+      else
+        my_each do |n|
+          memo = yield(memo, n)
+        end
+      end
+    end
+    memo
   end
+end
 
-  def multiply_els(array)
-    array.my_inject { |product, n| product * n }
+def multiply_els(array)
+  array.my_inject do |memo, n|
+    memo * n
   end
 end
 
@@ -198,14 +257,14 @@ puts ''; puts "\nmy_all? output\:"; puts ''
 puts (%w[lul what potatoes uhh].my_all? { |word| word.length >= 3 })
 puts (['lul', 'what', 'potatoes', 'uhh', nil].my_all?)
 puts ([1, 2, 3].my_all?(Integer))
-puts (['hi', 'hello', 'hey'].my_all?(/d/))
+puts (%w[hi hello hey].my_all?(/d/))
 puts ([3, 3, 3].my_all?(3))
 
 puts ''; puts "\nall? output\:"; puts ''
 puts (%w[lul what potatoes uhh].all? { |word| word.length >= 3 })
 puts (['lul', 'what', 'potatoes', 'uhh', nil].all?)
 puts ([1, 2, 3].all?(Integer))
-puts (['hi', 'hello', 'hey'].all?(/d/))
+puts (%w[hi hello hey].all?(/d/))
 puts ([3, 3, 3].all?(3))
 
 puts ''; puts "\nany? output\:"; puts ''
@@ -216,7 +275,7 @@ puts [].any?
 puts [nil].any?
 puts [nil, false].any?
 puts ([1, 2, 3].any?(Integer))
-puts (['hi', 'hello', 'hey'].any?(/d/))
+puts (%w[hi hello hey].any?(/d/))
 puts ([3, 3, 3].any?(3))
 
 puts ''; puts "\nmy_any? output\:"; puts ''
@@ -227,7 +286,7 @@ puts [].my_any?
 puts [nil].my_any?
 puts [nil, false].my_any?
 puts ([1, 2, 3].my_any?(Integer))
-puts (['hi', 'hello', 'hey'].my_any?(/d/))
+puts (%w[hi hello hey].my_any?(/d/))
 puts ([3, 3, 3].my_any?(3))
 
 puts ''; puts "\nmy_none? output\:"; puts ''
@@ -238,7 +297,7 @@ puts [].my_none?
 puts [nil].my_none?
 puts [nil, false].my_none?
 puts [1, 2, 3].my_none?(String)
-puts ['hi', 'hello', 'hey'].my_none?(/d/) #false
+puts %w[hi hello hey].my_none?(/d/) # false
 puts [3, 3, 3].my_none?(3)
 
 puts ''; puts "\nnone? output\:"; puts ''
@@ -249,7 +308,7 @@ puts [].none?
 puts [nil].none?
 puts [nil, false].none?
 puts [1, 2, 3].none?(String)
-puts ['hi', 'hello', 'hey'].none?(/d/) # true
+puts %w[hi hello hey].none?(/d/) # true
 puts [3, 3, 3].none?(3)
 
 puts ''; puts "\nmy_count output\:"; puts ''
@@ -273,25 +332,27 @@ p (1..4).my_map { |i| i * i } #=> [1, 4, 9, 16]
 p (1..4).my_map { 'cat' } #=> ["cat", "cat", "cat", "cat"]
 p (1..4).my_map(&p)
 
-# longest = %w[cat sheep bear].my_inject do |memo, word|
-#   memo.length > word.length ? memo : word
-# end
+longest = %w[cat sheep bear].my_inject do |memo, word|
+  memo.length > word.length ? memo : word
+end
 
-# puts ''; puts "\nmy_inject output\:"; puts ''
-# puts ((5..10).my_inject { |sum, n| sum + n })
-# puts (5..10).my_inject { |product, n| product * n }
-# puts longest
+puts ''; puts "\nmy_inject output\:"; puts ''
+puts ((5..10).my_inject { |sum, n| sum + n })
+puts (5..10).my_inject { |product, n| product * n }
+puts [1, 2, 3].my_inject(20, :*)
+puts longest
 
-# longest = %w[cat sheep bear].inject do |memo, word|
-#   memo.length > word.length ? memo : word
-# end
+longest = %w[cat sheep bear].inject do |memo, word|
+  memo.length > word.length ? memo : word
+end
 
-# puts ''; puts "\ninject output\:"; puts ''
-# puts ((5..10).inject { |sum, n| sum + n })
-# puts (5..10).inject { |product, n| product * n }
-# puts longest
+puts ''; puts "\ninject output\:"; puts ''
+puts ((5..10).inject { |sum, n| sum + n })
+puts (5..10).inject { |product, n| product * n }
+puts [1, 2, 3].inject(20, :*)
+puts longest
 
-# puts ''; puts "\nmultiply_els output\:"; puts ''
-# puts multiply_els([2, 4, 5])
+puts ''; puts "\nmultiply_els output\:"; puts ''
+puts multiply_els([2, 4, 5])
 
-# rubocop : enable  Style/Semicolon, Lint/AmbiguousBlockAssociation, Style/MixinUsage, Lint/UselessAssignment, Lint/Void, Lint/Syntax, Metrics/PerceivedComplexity
+# rubocop : enable  Style/Semicolon, Lint/AmbiguousBlockAssociation, Style/MixinUsage, Lint/Void, Metrics/PerceivedComplexity, Layout/EmptyLineBetweenDefs, Metrics/CyclomaticComplexity, Layout/TrailingWhitespace, Metrics/AbcSize,  Metrics/MethodLength,  Lint/ParenthesesAsGroupedExpression,  Style/RedundantParentheses, Metrics/ModuleLength
