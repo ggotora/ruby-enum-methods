@@ -266,12 +266,12 @@ puts [1, 2, 4, 2].count(&:even?)
 puts range.count
 puts [1, 2, 3].count(3)
 
-# testyproc = proc { |i| i * i }
+p = proc { |i| i * i }
 
-# puts ''; puts "\nmy_map output\:"; puts ''
-# p(1..4).my_map { |i| i * i } #=> [1, 4, 9, 16]
-# p(1..4).my_map { 'cat' } #=> ["cat", "cat", "cat", "cat"]
-# p (1..4).my_map(&testyproc)
+puts ''; puts "\nmy_map output\:"; puts ''
+p (1..4).my_map { |i| i * i } #=> [1, 4, 9, 16]
+p (1..4).my_map { 'cat' } #=> ["cat", "cat", "cat", "cat"]
+p (1..4).my_map(&p)
 
 # longest = %w[cat sheep bear].my_inject do |memo, word|
 #   memo.length > word.length ? memo : word
