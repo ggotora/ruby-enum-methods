@@ -45,7 +45,7 @@ Our project can be found at https://repl.it/@zerradi/MyEnumerableRuby#main.rb
 
 👤 **Author1**
 
-- Github: [@dasileker](https://github.com/dasileker)
+- Github: [@Zerradi](https://github.com/dasileker)
 
 👤 **Author2**
 
