@@ -109,13 +109,16 @@ module Enumerable
     result
   end
 
-  def my_count(&block)
+  def my_count(param = nil)
     count = 0
-    unless block_given?
-      count = length
-      return count
+    if block_given?
+      to_a.my_each { |item| count += 1 if yield(item) }
+    elsif !block_given? && param.nil?
+      count = to_a.length
+    else
+      count = to_a.my_select { |item| item == param }.length
     end
-    count = my_select(&block).length
+    count
   end
 
   def my_map()  
@@ -249,22 +252,19 @@ puts [1, 2, 3].none?(String)
 puts ['hi', 'hello', 'hey'].none?(/d/) # true
 puts [3, 3, 3].none?(3)
 
-# puts ''; puts "\nnone? output\:"; puts ''
-# puts %w[ant bear cat].none? { |word| word.length == 5 }
-# puts %w[ant bear cat].none? { |word| word.length >= 4 }
-# puts [].none?
-# puts [nil].none?
-# puts [nil, false].none?
+puts ''; puts "\nmy_count output\:"; puts ''
+puts %w[ant bear cat].my_count
+puts %w[ant bear cat].my_count { |word| word.length >= 4 }
+puts [1, 2, 4, 2].count(&:even?)
+puts range.my_count
+puts [1, 2, 3].my_count(3)
 
-# puts ''; puts "\nmy_count output\:"; puts ''
-# puts %w[ant bear cat].my_count
-# puts %w[ant bear cat].my_count { |word| word.length >= 4 }
-# puts [1, 2, 4, 2].count(&:even?)
-
-# puts ''; puts "\ncount output\:"; puts ''
-# puts %w[ant bear cat].count
-# puts %w[ant bear cat].count { |word| word.length >= 4 }
-# puts [1, 2, 4, 2].count(&:even?)
+puts ''; puts "\ncount output\:"; puts ''
+puts %w[ant bear cat].count
+puts %w[ant bear cat].count { |word| word.length >= 4 }
+puts [1, 2, 4, 2].count(&:even?)
+puts range.count
+puts [1, 2, 3].count(3)
 
 # testyproc = proc { |i| i * i }
 
