@@ -1,159 +1,201 @@
-# rubocop: disable Metrics/PerceivedComplexity, Metrics/AbcSize, Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/ModuleLength, Lint/InterpolationCheck
+# rubocop: disable Metrics/PerceivedComplexity, Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/ModuleLength,  Style/MixinUsage, Lint/UselessAssignment, Lint/AmbiguousBlockAssociation, Lint/Void, Lint/RedundantWithIndex, Layout/EmptyLines, Lint/ParenthesesAsGroupedExpression, Style/RedundantParentheses,  Style/Semicolon
 
 module Enumerable
-  def my_each(_array = nil)
+  # =========
+  #  my_each
+  # =========
+
+  def my_each(_arr = nil)
     return to_enum unless block_given?
 
-    Array(self).length.times do |i|
+    arr_size = Array(self).length
+    arr_size.times do |i|
       yield(Array(self)[i])
     end
     self
   end
 
-  def my_each_with_index(_array = nil)
+  # ====================
+  #  my_each_with_index
+  # ====================
+
+  def my_each_with_index(_arr = nil)
     return to_enum unless block_given?
 
-    Array(self).length.times do |index|
-      yield(to_a[index], index)
+    arr_size = Array(self).length
+    arr_size.times do |i|
+      yield(Array(self)[i], i)
     end
     self
   end
 
-  def my_select
+  # ===========
+  #  my_select
+  # ===========
+
+  def my_select(_arr = nil)
     return to_enum unless block_given?
 
-    result = []
-    my_each do |item|
-      result.push(item) if yield(item)
+    new_arr = []
+    arr_size = Array(self).length
+    arr_size.times do |x|
+      new_arr.push(Array(self)[x]) if yield(Array(self)[x])
     end
-    result
+    new_arr
   end
 
-  def my_all?(obj = nil)
-    result = true
+  # ========
+  #  my_all
+  # ========
 
-    if obj.nil? && !block_given?
-      my_each { |i| return !result if i.nil? || !i }
-    elsif !obj.nil? && obj.is_a?(Class)
-      my_each { |i| return !result unless i.is_a?(obj) }
-    elsif obj.is_a? Integer
-      my_each { |i| return !result unless i == obj }
-    elsif !obj.nil? && obj.is_a?(Regexp) || obj.is_a?(String)
-      my_each { |i| return !result unless i.match(obj) }
-    elsif obj.is_a? Array
-      return !result unless obj.sort == sort
-    elsif block_given?
-      my_each { |i| return !result if yield(i) }
-    end
-    result
-  end
-
-  def my_any?(obj = nil)
+  def my_all?(arg = nil)
     result = false
-    if obj.nil? && !block_given?
-      my_each { |i| return !result if i == true }
-    elsif !obj.nil? && obj.is_a?(Class)
-      my_each { |i| return !result if i.is_a?(obj) }
-    elsif obj.is_a? String
-      my_each { |i| return !result if obj.match?(i) }
-    elsif obj.is_a? Integer
-      my_each { |i| return !result if i == obj }
-    elsif !obj.nil? && obj.is_a?(Regexp) || obj.is_a?(String)
-      my_each { |i| return !result if i.match(obj) }
+
+    if !arg.nil? && arg.is_a?(Class)
+      my_each { |i| return result unless i.is_a?(arg) }
+    elsif !arg.nil? && arg.is_a?(Integer)
+      my_each { |x| return result unless x == arg }
+    elsif !arg.nil? && arg.is_a?(Regexp) || arg.is_a?(String)
+      my_each { |y| return result unless y.match(arg) }
+    elsif !block_given?
+      my_each { |a| return result if a.nil? || !a }
     elsif block_given?
-      my_each { |i| return !result if yield(i) }
+      my_each { |b| return result unless yield(b) }
     end
-    result
+    !result
   end
 
-  def my_none?(obj = nil)
+  # ========
+  #  my_any
+  # ========
+
+  def my_any?(arg = nil)
     result = true
-    if obj.nil? && !block_given?
-      my_each { |i| return !result if i.nil? || !i }
-    elsif !obj.nil? && obj.is_a?(Class)
-      my_each { |i| return !result if i.is_a?(obj) }
-    elsif obj.is_a?(String) && !is_a?(Range)
-      my_each { |i| return !result if i.match?(obj) }
-    elsif obj.is_a? Integer
-      my_each { |i| return !result if i == obj }
-    elsif !obj.nil? && obj.is_a?(Regexp) || obj.is_a?(String)
-      my_each { |i| return !result if i.match(obj) }
+
+    if !arg.nil? && arg.is_a?(Class)
+      my_each { |i| return result if i.is_a?(arg) }
+    elsif !arg.nil? && arg.is_a?(Integer)
+      my_each { |x| return result if x == arg }
+    elsif !arg.nil? && arg.is_a?(Regexp) || arg.is_a?(String)
+      my_each { |y| return result if y.match(arg) }
+    elsif !block_given?
+      my_each { |a| return result unless a.nil? || !a }
     elsif block_given?
-      my_each { |i| return !result if yield(i) }
+      my_each { |b| return result if yield(b) }
     end
-    result
+    !result
   end
 
-  def my_count(obj = nil)
-    counter = 0
-    if obj.nil? && !block_given?
-      my_each { |_i| counter += 1 }
-    elsif obj.nil? && block_given?
-      my_each { |i| counter += 1 if yield(i) }
-    elsif obj.is_a? Integer
-      my_each { |i| counter += 1 if i == obj }
-    elsif obj.is_a? String
-      my_each { |i| counter += 1 if i.match?(obj) }
+  # ==========
+  #  my_none?
+  # ==========
+
+  def my_none?(arg = nil)
+    result = false
+
+    if !arg.nil? && arg.is_a?(Class)
+      my_each { |i| return result if i.is_a?(arg) }
+    elsif !arg.nil? && arg.is_a?(Integer)
+      my_each { |x| return result if x == arg }
+    elsif !arg.nil? && arg.is_a?(Regexp) || arg.is_a?(String)
+      my_each { |y| return result if y.match(arg) }
+    elsif !block_given?
+      my_each { |a| return result unless a.nil? || !a }
+    elsif block_given?
+      my_each { |b| return result if yield(b) }
     end
-    counter
+    !result
   end
 
-  def my_map(var = nil)
-    return to_enum unless block_given? || var
+  # ==========
+  #  my_count
+  # ==========
 
-    result = []
-    if block_given? && var.nil?
-      my_each do |n|
-        result.push(yield(n))
+  def my_count(count_one = nil)
+    arr_size = Array(self).length
+    count = 0
+
+    unless block_given?
+      return arr_size if count_one.nil?
+
+      arr_size.times do |i|
+        count += 1 if Array(self)[i] == count_one
+      end
+    end
+
+    if block_given? && !Array(self).nil?
+      arr_size.times do |i|
+        count += 1 if yield(Array(self)[i])
+      end
+    end
+    count
+  end
+
+  # ========
+  #  my_map
+  # ========
+
+  def my_map(proc = nil)
+    return to_enum unless block_given? || proc
+
+    new_arr = []
+    proc ? my_each { |i| new_arr << proc.call(i) } : my_each { |i| new_arr << yield(i) }
+    new_arr
+  end
+
+  # ===========
+  #  my_inject
+  # ===========
+
+  def my_inject(*arg)
+    raise 'LocalJumpError: No block or argument has been given!' if !block_given? && arg[0].nil?
+
+    arr = Array(self)
+
+    arg_one = arg[0]
+    arg_two = arg[1]
+    arg_two = arg_one if arg_two.nil?
+
+    if arg_one.nil? || arg_one.is_a?(Symbol)
+      arr = drop(1)
+      arg_one = to_a[0]
+    else
+      arr = to_a
+    end
+
+    if block_given?
+      arr.my_each do |i|
+        arg_one = yield(arg_one, i)
       end
     else
-      my_each do |n|
-        result.push(var.call(n))
+      arr.my_each do |i|
+        arg_one = arg_one.send(arg_two, i)
       end
     end
-    result
-  end
-
-  def my_inject(*obj)
-    raise 'LocalJumpError: Block or argument missing!' if !block_given? && obj[0].nil?
-
-    result = Array(self)[0]
-
-    is_symbol = false
-    if (obj[0].class == Symbol) || obj[0].nil?
-      is_symbol = true
-    elsif obj[0].is_a? Numeric
-      result = obj[0]
-    end
-
-    Array(self).my_each_with_index do |item, index|
-      next if is_symbol && index.zero?
-
-      if block_given?
-        result = yield(result, item)
-      elsif obj[0].is_a? Numeric
-        result = result.send(obj[1], item)
-      elsif obj[0].class == Symbol
-        result = result.send(obj[0], item)
-      end
-    end
-    result
-  end
-
-  def multiply_els(arr)
-  arr.my_inject { |product, n| product * n }
+    arg_one
   end
 end
 
+# =============
+#  multiply_els
+# =============
+
+def multiply_els(arr)
+  arr.my_inject(:*)
+end
 
 
 include Enumerable
+array = [2, 7, 5, 9]
 array1 = ['hi', 34, 'potatoes', 'horses', 33]
 array2 = [2, 7, 8, 5]
 hash = { a: 1, b: 2, c: 3, d: 4, e: 5 }
 block = proc { |num| num }
 my_proc = proc { |num| num > 10 }
 range = (5..10)
+true_block = proc { |num| num <= 9 }
+false_block = proc { |num| num >= 9 }
+false_array = [nil, false, nil, false]
 # range = Range.new(5, 50)
 
 puts "\nmy_each output\:"; puts ''
@@ -276,6 +318,12 @@ p [1, false, 'hi', []].my_all?
 puts
 puts "\([3, 3, 3].my_all?(3))\:"; puts ''
 puts ([3, 3, 3].my_all?(3))
+puts
+puts "\Array.my_all?(&true_block)\:"; puts ''
+p array.my_all?(&true_block)
+puts
+puts "\Array.my_all?(&false_block)\:"; puts ''
+p array.my_all?(&false_block)
 
 puts ''; puts "\nall? output\:"; puts ''
 puts (%w[lul what potatoes uhh].all? { |word| word.length >= 3 })
@@ -294,6 +342,12 @@ p [1, false, 'hi', []].all?
 puts
 puts "\([3, 3, 3].all?(3))\:"; puts ''
 puts ([3, 3, 3].all?(3))
+puts
+puts "\Array.all?(&true_block)\:"; puts ''
+p array.all?(&true_block)
+puts
+puts "\Array.my_all?(&false_block)\:"; puts ''
+p array.all?(&false_block)
 
 
 puts ''; puts "\nany? output\:"; puts ''
@@ -359,7 +413,7 @@ puts
 puts ''; puts "\%w[ant bear cat].my_none? { |word| word.length >= 4 }\:"; puts ''
 puts %w[ant bear cat].my_none? { |word| word.length >= 4 }
 puts
-puts ''; puts "\range.my_none?\:"; puts ''
+puts ''; puts "\Range.my_none?\:"; puts ''
 puts range.my_none?
 puts
 puts ''; puts "\[].my_none?\:"; puts ''
@@ -382,6 +436,10 @@ puts %w[hi hello hey].my_none?(/d/)
 puts
 puts ''; puts "\[3, 3, 3].my_none?(3)\:"; puts ''
 puts [3, 3, 3].my_none?(3)
+puts
+puts ''; puts "\False_array.my_none?\:"; puts ''
+p false_array.my_none?
+
 
 puts ''; puts "\nnone? output\:"; puts ''
 puts ''; puts "\%w[ant bear cat].none? { |word| word.length == 5 }\:"; puts ''
@@ -390,7 +448,7 @@ puts
 puts ''; puts "\%w[ant bear cat].none? { |word| word.length >= 4 }\:"; puts ''
 puts %w[ant bear cat].none? { |word| word.length >= 4 }
 puts
-puts ''; puts "\range.none?\:"; puts ''
+puts ''; puts "\Range.none?\:"; puts ''
 puts range.none?
 puts
 puts ''; puts "\[].none?\:"; puts ''
@@ -413,6 +471,9 @@ puts %w[hi hello hey].none?(/d/)
 puts
 puts ''; puts "\[3, 3, 3].none?(3)\:"; puts ''
 puts [3, 3, 3].none?(3)
+puts
+puts ''; puts "\False_array.none?\:"; puts ''
+p false_array.none?
 
 puts ''; puts "\nmy_count output\:"; puts ''
 puts ''; puts "\%w[ant bear cat].my_count\:"; puts ''
@@ -497,5 +558,4 @@ puts longest
 puts ''; puts "\nmultiply_els output\:"; puts ''
 puts multiply_els([2, 4, 5])
 
-
-# rubocop: enable Metrics/PerceivedComplexity, Metrics/AbcSize, Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/ModuleLength, Lint/InterpolationCheck
+# rubocop: enable Metrics/PerceivedComplexity, Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/ModuleLength,  Style/MixinUsage, Lint/UselessAssignment, Lint/AmbiguousBlockAssociation, Lint/Void, Lint/RedundantWithIndex, Layout/EmptyLines, Lint/ParenthesesAsGroupedExpression, Style/RedundantParentheses,  Style/Semicolon
