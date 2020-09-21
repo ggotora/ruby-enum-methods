@@ -4,7 +4,7 @@ Add your new methods onto the existing Enumerable module
 
 
 ## Project screenshot
-[screenshot](./screenshot.png)
+<img alt="Demonstration" src="screenshot.png"/>
 
 
 ## Project specifications
