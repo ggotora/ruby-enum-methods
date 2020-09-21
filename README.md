@@ -2,6 +2,11 @@
 Add your new methods onto the existing Enumerable module
 > The aim of this project is to create an Enumerable module that gets mixed into the Array and Hash classes (among others) and provides you with lots of handy iterator methods. To prove that there's no magic to it, you're going to rebuild those methods.
 
+
+## Project screenshot
+[screenshot](screenshot.png)
+
+
 ## Project specifications
 1. Create a script file to house your methods and run it in IRB to test them later.
 2. Add your new methods onto the existing Enumerable module.  Ruby makes this easy for you because any class or module can be added to without trouble ... just do something like:
@@ -39,6 +44,15 @@ Our project can be found at https://repl.it/@zerradi/MyEnumerableRuby#main.rb
 ## Live Demo
 
 [Live Demo Link](https://repl.it/@zerradi/MyEnumerableRuby#main.rb)
+
+
+## To run the project in local
+
+- clone the repository from here [repo link](git@github.com:ggotora/ruby_enum_methods.git)
+
+- Enter to GIT bash and hit: git clone git@github.com:ggotora/ruby_enum_methods.git
+
+- Open vscode and you have it now
 
 
 ## 👨🏽‍💻 👨🏿‍💻 Creators
