@@ -148,27 +148,32 @@ module Enumerable
   # ===========
 
   def my_inject(*arg)
-    raise('LocalJumpError.new NO BLOCK OR ARGUMENT GIVEN!') if !block_given? && arg == nil?
-
-    check = false
-    result = Array(self)[0]
-    if (arg[0].class == Symbol) || arg[0].nil?
-      check = true
-    elsif arg[0].is_a? Numeric
-      result = arg[0]
+    if !block_given? && arg[0].nil?
+      return yield arg
     end
-    Array(self).my_each_with_index do |item, index|
-      next if check && index.zero?
+    arr = Array(self)
 
-      if block_given?
-        result = yield(result, item)
-      elsif arg[0].class == Symbol
-        result = result.send(arg[0], item)
-      elsif arg[0].is_a? Numeric
-        result = result.send(arg[1], item)
+    arg_one = arg[0]
+    arg_two = arg[1]
+    arg_two = arg_one if arg_two.nil?
+
+    if arg_one.nil? || arg_one.is_a?(Symbol)
+      arr = drop(1)
+      arg_one = to_a[0]
+    else
+      arr = to_a
+    end
+
+    if block_given?
+      arr.my_each do |i|
+        arg_one = yield(arg_one, i)
+      end
+    else
+      arr.my_each do |i|
+        arg_one = arg_one.send(arg_two, i)
       end
     end
-    result
+    arg_one
   end
 end
 
@@ -179,6 +184,7 @@ end
 def multiply_els(arr)
   arr.my_inject(:*)
 end
+
 
 
 # rubocop: enable Metrics/PerceivedComplexity, Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/ModuleLength,  Style/MixinUsage, Lint/UselessAssignment, Lint/AmbiguousBlockAssociation, Lint/Void, Lint/RedundantWithIndex, Layout/EmptyLines, Lint/ParenthesesAsGroupedExpression, Style/RedundantParentheses,  Style/Semicolon
