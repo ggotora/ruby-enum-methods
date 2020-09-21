@@ -1,4 +1,4 @@
-# rubocop: disable Metrics/PerceivedComplexity, Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/ModuleLength,  Layout/EmptyLines
+# rubocop: disable Metrics/PerceivedComplexity, Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/ModuleLength,  Layout/EmptyLines, Layout/TrailingEmptyLines
 
 module Enumerable
   # =========
@@ -186,5 +186,4 @@ end
 
 
 
-# rubocop: enable Metrics/PerceivedComplexity, Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/ModuleLength, Layout/EmptyLines
-
+# rubocop: enable Metrics/PerceivedComplexity, Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/ModuleLength, Layout/EmptyLines, Layout/TrailingEmptyLines
