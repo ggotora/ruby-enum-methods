@@ -535,6 +535,9 @@ puts
 puts ''; puts "\[1, 2, 3].my_inject(20, :*)\:"; puts ''
 puts [1, 2, 3].my_inject(20, :*)
 puts
+# puts ''; puts "\[2, 5, 3].my_inject\:"; puts ''
+# puts [2, 5, 3].my_inject
+# puts
 puts ''; puts "\longest\:"; puts ''
 puts longest
 
@@ -552,6 +555,9 @@ puts
 puts ''; puts "\[1, 2, 3].inject(20, :*)\:"; puts ''
 puts [1, 2, 3].inject(20, :*)
 puts
+# puts ''; puts "\[2, 5, 3].inject\:"; puts ''
+# puts [2, 5, 3].minject
+# puts
 puts ''; puts "\longest\:"; puts ''
 puts longest
 
