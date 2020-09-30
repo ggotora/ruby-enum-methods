@@ -1,9 +1,6 @@
 # rubocop: disable Metrics/PerceivedComplexity, Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/ModuleLength,  Layout/EmptyLines, Layout/TrailingEmptyLines
 
 module Enumerable
-  # =========
-  #  my_each
-  # =========
 
   def my_each(_arr = nil)
     return to_enum unless block_given?
@@ -14,11 +11,7 @@ module Enumerable
     end
     self
   end
-
-  # ====================
-  #  my_each_with_index
-  # ====================
-
+  
   def my_each_with_index(_arr = nil)
     return to_enum unless block_given?
 
@@ -28,10 +21,6 @@ module Enumerable
     end
     self
   end
-
-  # ===========
-  #  my_select
-  # ===========
 
   def my_select(_arr = nil)
     return to_enum unless block_given?
@@ -43,10 +32,6 @@ module Enumerable
     end
     new_arr
   end
-
-  # ========
-  #  my_all
-  # ========
 
   def my_all?(arg = nil)
     result = false
@@ -65,10 +50,6 @@ module Enumerable
     !result
   end
 
-  # ========
-  #  my_any
-  # ========
-
   def my_any?(arg = nil)
     result = true
 
@@ -86,10 +67,6 @@ module Enumerable
     !result
   end
 
-  # ==========
-  #  my_none?
-  # ==========
-
   def my_none?(arg = nil)
     result = false
 
@@ -106,10 +83,6 @@ module Enumerable
     end
     !result
   end
-
-  # ==========
-  #  my_count
-  # ==========
 
   def my_count(count_one = nil)
     arr_size = Array(self).length
@@ -131,10 +104,6 @@ module Enumerable
     count
   end
 
-  # ========
-  #  my_map
-  # ========
-
   def my_map(proc = nil)
     return to_enum unless block_given? || proc
 
@@ -142,10 +111,6 @@ module Enumerable
     proc ? my_each { |i| new_arr << proc.call(i) } : my_each { |i| new_arr << yield(i) }
     new_arr
   end
-
-  # ===========
-  #  my_inject
-  # ===========
 
   def my_inject(*arg)
     return yield arg if !block_given? && arg[0].nil?
@@ -175,10 +140,6 @@ module Enumerable
     arg_one
   end
 end
-
-# =============
-#  multiply_els
-# =============
 
 def multiply_els(arr)
   arr.my_inject(:*)
